@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using VideoLibrary;
 
-namespace FileDownloader
+namespace wf_DownloadManager.Dump
 {
     class FileDownload_02
     {

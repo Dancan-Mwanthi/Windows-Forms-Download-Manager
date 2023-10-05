@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace wf_DownloadManager
+namespace wf_DownloadManager.Dump
 {
     public class FileDownload_01
     {

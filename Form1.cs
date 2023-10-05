@@ -5,8 +5,10 @@ using System.IO;
 using System.Windows.Forms;
 using System.Net;
 using Microsoft.VisualBasic.Devices;
-using FileDownloader;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using wf_DownloadManager.Dump;
+using System.Threading;
+using System.ComponentModel;
 
 namespace wf_DownloadManager
 {
@@ -24,11 +26,16 @@ namespace wf_DownloadManager
         private bool _bPause = false;
         private string _downloadFolder; // Specify the download folder path here
         private ManualResetEventSlim _pauseEvent = new ManualResetEventSlim(false);
+        CancellationTokenSource cancellationTokenSource; // Create a token source.
+        private List<Thread>  downloadThreads;
 
 
         public Form1()
         {
             InitializeComponent();
+            cancellationTokenSource = new CancellationTokenSource();
+            downloadThreads = new List<Thread>();
+
         }
 
         private async void btn_Start_Click(object sender, EventArgs e)
@@ -41,6 +48,7 @@ namespace wf_DownloadManager
                 _downloadFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads", video.FullName);
 
                 await BeginDownload(new Uri(video.Uri));
+                //await BeginDownloadAsync(new Uri(video.Uri));
             }
             catch (Exception ex)
             {
@@ -49,7 +57,6 @@ namespace wf_DownloadManager
         }
         private void HttpDownloader_ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-
             if (_bPause)
                 _pauseEvent.Wait();
             
@@ -99,16 +106,30 @@ namespace wf_DownloadManager
                 control.Text = text;
             }
         }
-        private void HttpDownloader_DownloadCompleted(object sender, EventArgs e)
+        private void HttpDownloader_DownloadCompleted(object sender, AsyncCompletedEventArgs e)
         {
             this.Invoke((MethodInvoker)delegate
             {
-                // Fire Completion event with the downloaded file path
-                OnDownloadCompleted?.Invoke(_downloadFolder);
-                _pauseEvent.Dispose();
+                if (e.Cancelled)
+                {
+                    val_Status.Text = "Download Not Cancelled";
+                }
+                else if (e.Error != null)
+                {
+                    val_Status.Text = e.Error.Message;
+                }
+                else
+                {
+                    cancellationTokenSource.Cancel();
+                    
+                    _pauseEvent.Dispose();
 
-                val_Status.Text = "Download Completed";
-                val_progressPercentage.Text = "100%";
+                    val_Status.Text = "Download Completed";
+                    val_progressPercentage.Text = "100%";
+                }
+                // Fire Completion event with the downloaded file path
+                //OnDownloadCompleted?.Invoke(_downloadFolder);
+                
             });
         }
 
@@ -139,63 +160,107 @@ namespace wf_DownloadManager
             }
             //_pauseEvent.Set(); // Set the event to a non-signaled state (resumed).
         }
+
         public async Task BeginDownload(Uri uri)
         {
             // Create Background thread
-            Thread downloadThread = new Thread(async () =>
+            try
             {
-                WebRequest webRequest = WebRequest.Create(uri);
-                WebResponse webResponse = webRequest.GetResponse();
-
-                string filePath = Path.Combine(_downloadFolder);
-
-                //using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
-                using (WebClient client = new WebClient())
-                using (Stream webStream = webResponse.GetResponseStream())
-                {
-                    byte[] buffer = new byte[256];
-                    int readCount = 1;
-
-                    client.DownloadProgressChanged += HttpDownloader_ProgressChanged;
-                    client.DownloadFileCompleted += HttpDownloader_DownloadCompleted;
-
-                    while (readCount > 0)
+                Thread downloadThread = new Thread(async () =>
                     {
-                        // Read download stream
-                        readCount = webStream.Read(buffer, 0, buffer.Length);
 
-                        if (readCount > 0)
+                        WebRequest webRequest = WebRequest.Create(uri);
+                        WebResponse webResponse = webRequest.GetResponse();
+
+                        //string filePath = Path.Combine(_downloadFolder);
+
+                        //using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+                        using (WebClient client = new WebClient())
+                        using (Stream webStream = webResponse.GetResponseStream())
                         {
-                            // Write to file
-                            //fileStream.WriteAsync(buffer, 0, readCount);
-                            await client.DownloadFileTaskAsync(uri, _downloadFolder);
+                            byte[] buffer = new byte[256];
+                            int readCount = 1;
 
-                            // Waiting 100msec while _bPause is true
+                            client.DownloadProgressChanged += HttpDownloader_ProgressChanged;
+                            client.DownloadFileCompleted += HttpDownloader_DownloadCompleted;
+                            //client.DownloadDataCompleted += HttpDownloader_DownloadCompleted;
 
-                            //while (true)
-                            //{
-                            //    lock (_lock)
-                            //    {
-                            //        if (_bPause)
-                            //        {
-                            //            Thread.Sleep(100);
-                            //        }
-                            //        else
-                            //        {
-                            //            break;
-                            //        }
-                            //    }
-                            //}
+                            while (readCount > 0)
+                            {
+                                //if (cancellationTokenSource.IsCancellationRequested)
+                                //{
+                                //    downloadThread.Join();
+                                //    cancellationTokenSource.Token.ThrowIfCancellationRequested();
+                                //}
+
+                                // Check for cancellation
+                                if (cancellationTokenSource.Token.IsCancellationRequested)
+                                {
+                                    // Handle cancellation gracefully
+                                    cancellationTokenSource.Dispose();
+                                    return;
+                                }
+
+
+                                //if (cancellationTokenSource.Token.IsCancellationRequested)
+                                //{
+                                //    // Cancellation requested, exit the loop and thread
+                                //    cancellationTokenSource.Dispose();
+                                //    downloadThread.Abort();
+                                //}
+
+                                // Read download stream
+                                readCount = webStream.Read(buffer, 0, buffer.Length);
+
+                                if (readCount > 0)
+                                {
+                                    // Write to file
+                                    //fileStream.WriteAsync(buffer, 0, readCount);
+                                    await client.DownloadFileTaskAsync(uri, _downloadFolder);
+                                    //client.DownloadDataAsync(uri, tokenSource.Token);
+
+                                    // Waiting 100msec while _bPause is true
+
+                                    //while (true)
+                                    //{
+                                    //    lock (_lock)
+                                    //    {
+                                    //        if (_bPause)
+                                    //        {
+                                    //            Thread.Sleep(100);
+                                    //        }
+                                    //        else
+                                    //        {
+                                    //            break;
+                                    //        }
+                                    //    }
+                                    //}
+                                }
+                            }
                         }
-                    }
-                }
 
-                // Fire Completion event with the downloaded file path
-                OnDownloadCompleted?.Invoke(filePath);
-            });
+                        // Fire Completion event with the downloaded file path
+                        //OnDownloadCompleted?.Invoke(tokenSource.Token);
+                    });
 
-            // Start background thread job
-            downloadThread.Start();
+                // Start background thread job
+
+                downloadThreads.Add(downloadThread);
+
+                downloadThread.Start();
+            }
+            catch (OperationCanceledException)
+            {
+                cancellationTokenSource.Dispose();
+            }
+            //catch (Exception ex)
+            //{
+            //    cancellationTokenSource.Dispose();
+            //}
+            //finally
+            //{
+
+            //}
         }
     }
 
