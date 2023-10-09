@@ -44,6 +44,7 @@ namespace wf_DownloadManager
         private ControlsModel controlsModel;
 
         private int controlCounter = 3;
+        private int controlUniqueName = 0;
 
         public Form1()
         {
@@ -65,10 +66,32 @@ namespace wf_DownloadManager
             controlsModel.val_status = createNewControl(val_downloaded) as Label;
             controlsModel.lbl_status = createNewControl(lbl_Status) as Label;
             controlsModel.val_percentageProgress = createNewControl(val_progressPercentage) as Label;
-            controlsModel.btn_togglePause = createNewControl(btn_Pause) as System.Windows.Forms.Button;
+            controlsModel.btn_togglePause = createNewControl(btn_Pause);
             controlsModel.val_progressBar = createNewControl(progressBar) as System.Windows.Forms.ProgressBar;
 
-            controlsModel.btn_togglePause.Click += btn_Pause_Click;
+            //controlsModel.btn_togglePause.Click += btn_Pause_Click;
+        }
+
+        private System.Windows.Forms.Button createNewControl(System.Windows.Forms.Button originalControl)
+        {
+            System.Windows.Forms.Button newControl = new ();
+
+            newControl.Name = originalControl.Name + controlUniqueName++;
+            newControl.Text = originalControl.Text;
+            newControl.Width = originalControl.Width;
+            newControl.Location = new System.Drawing.Point(originalControl.Location.X, originalControl.Location.Y + (controlCounter - 1) * 25);
+            newControl.AutoSize = true;
+            newControl.Visible = true;
+
+            //newControl.Click += btn_Pause_Click;
+            if (originalControl.Name != newControl.Name)
+            {
+                newControl.Click += btn_Pause_Click;
+            }
+
+            this.Controls.Add(newControl);
+
+            return newControl;
         }
 
         private Control createNewControl(Control originalControl)
@@ -90,7 +113,7 @@ namespace wf_DownloadManager
                     break;
             }
 
-            newControl.Name = originalControl.Name+controlCounter;
+            newControl.Name = originalControl.Name + controlUniqueName++;
             newControl.Text = originalControl.Text;
             newControl.Width = originalControl.Width;
             newControl.Location = new System.Drawing.Point(originalControl.Location.X, originalControl.Location.Y + (controlCounter - 1) * 25);
@@ -119,7 +142,7 @@ namespace wf_DownloadManager
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void btn_Pause_Click(object sender, EventArgs e)
+        public void btn_Pause_Click(object sender, EventArgs e)
         {
             xIsPaused = TogglePauseThread.TogglePause();
             if (xIsPaused)

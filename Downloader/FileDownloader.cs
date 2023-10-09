@@ -54,6 +54,7 @@ namespace wf_DownloadManager.Downloader
                         byte[] buffer = new byte[256];
                         int readCount = 1;
 
+                        //controlsModel.btn_togglePause.Click += Form1.btn_Pause_Click;
                         //client.DownloadProgressChanged += progressChanged.eProgressChanged;
 
                         client.DownloadProgressChanged += (sender, e) =>
@@ -62,7 +63,12 @@ namespace wf_DownloadManager.Downloader
                         };
 
 
-                        client.DownloadFileCompleted += downloadComplete.eDownloadComplete;
+                        //client.DownloadFileCompleted += downloadComplete.eDownloadComplete;
+                        client.DownloadFileCompleted += (sender, e) =>
+                        {
+                            downloadComplete.eDownloadComplete(sender, e, controlsModel);
+                        };
+
 
                         while (readCount > 0)
                         {
@@ -70,28 +76,22 @@ namespace wf_DownloadManager.Downloader
                             Form1._cancellationTokenSource ??= new CancellationTokenSource(); //null-coalescing assignment operator (??=).
 
                             if (downloadList.ContainsKey(controlsModel.val_downloadLabel.Name))
-                                Form1._cancellationTokenSource.Cancel();
+                                    Form1._cancellationTokenSource.Cancel();
                             else
                                 downloadList.Add(controlsModel.val_downloadLabel.Name, linkInfo.downloadFolderWithFileName);
 
 
                             if (Form1._cancellationToken.IsCancellationRequested)
-                            {
-                                Form1._cancellationTokenSource.Dispose();
                                 return;
-                            }
 
                             if (TogglePauseThread.IsPaused())
-                            {
                                 TogglePauseThread.GetPauseEvent().Wait(); // Pause the thread.
-                            }
 
                             readCount = webStream.Read(buffer, 0, buffer.Length);
 
                             if (readCount > 0)
-                            {
                                 await client.DownloadFileTaskAsync(linkInfo.uri, linkInfo.downloadFolderWithFileName);
-                            }
+                            
                         }
                     }
                 });
