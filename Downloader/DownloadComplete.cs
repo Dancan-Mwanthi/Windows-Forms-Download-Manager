@@ -18,8 +18,8 @@ namespace wf_DownloadManager.Downloader
         public DownloadComplete(Form _form)
         {
             xform = _form;
-            val_downloaded = _form.Controls.Find("val_downloaded", true).FirstOrDefault();
-            val_progressPercentage = _form.Controls.Find("val_progressPercentage", true).FirstOrDefault();
+            val_downloaded = xform.Controls.Find("val_downloaded", true).FirstOrDefault();
+            val_progressPercentage = xform.Controls.Find("val_progressPercentage", true).FirstOrDefault();
         }
         public void eDownloadComplete(object sender, AsyncCompletedEventArgs e)
         {
@@ -27,30 +27,11 @@ namespace wf_DownloadManager.Downloader
         }
         private void xx_downloadCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            //xform.Invoke((MethodInvoker)delegate
-            //{
-            //    if (e.Cancelled)
-            //    {
-            //        val_downloaded.Text = "Download Not Cancelled";
-            //    }
-            //    else if (e.Error != null)
-            //    {
-            //        val_downloaded.Text = e.Error.Message;
-            //    }
-            //    else
-            //    {
-            //        Form1._cancellationTokenSource.Cancel();
+            //if (Form1._cancellationTokenSource != null && 
+            //    Form1._cancellationTokenSource.IsCancellationRequested)
+            //    Form1._cancellationTokenSource?.Cancel();
 
-            //        TogglePauseThread.GetPauseEvent().Dispose();
-
-            //        val_downloaded.Text = "Download Completed";
-            //        //val_progressPercentage.Text = "100%";
-            //    }
-            //});
-
-            Form1._cancellationTokenSource.Cancel();
-
-            TogglePauseThread.GetPauseEvent().Dispose();
+            //TogglePauseThread.GetPauseEvent().Dispose();
 
             if (val_downloaded.InvokeRequired)
             {

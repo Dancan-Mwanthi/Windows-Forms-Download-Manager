@@ -58,32 +58,44 @@
             // 
             // lbl_Status
             // 
+            lbl_Status.AccessibleDescription = "cntrlsDownload";
+            lbl_Status.AccessibleName = "cntrlsDownload";
             lbl_Status.AutoSize = true;
-            lbl_Status.Location = new Point(32, 97);
+            lbl_Status.Location = new Point(19, 51);
             lbl_Status.Name = "lbl_Status";
             lbl_Status.Size = new Size(45, 15);
             lbl_Status.TabIndex = 2;
+            lbl_Status.Tag = "cntrlsDownload";
             lbl_Status.Text = "Status :";
+            lbl_Status.Visible = false;
             // 
             // progressBar
             // 
-            progressBar.Location = new Point(76, 115);
+            progressBar.AccessibleDescription = "cntrlsDownload";
+            progressBar.AccessibleName = "cntrlsDownload";
+            progressBar.Location = new Point(63, 69);
             progressBar.Name = "progressBar";
             progressBar.Size = new Size(450, 23);
             progressBar.TabIndex = 4;
+            progressBar.Tag = "cntrlsDownload";
+            progressBar.Visible = false;
             // 
             // val_progressPercentage
             // 
+            val_progressPercentage.AccessibleDescription = "cntrlsDownload";
+            val_progressPercentage.AccessibleName = "cntrlsDownload";
             val_progressPercentage.AutoSize = true;
-            val_progressPercentage.Location = new Point(503, 97);
+            val_progressPercentage.Location = new Point(490, 51);
             val_progressPercentage.Name = "val_progressPercentage";
             val_progressPercentage.Size = new Size(23, 15);
             val_progressPercentage.TabIndex = 5;
+            val_progressPercentage.Tag = "cntrlsDownload";
             val_progressPercentage.Text = "0%";
+            val_progressPercentage.Visible = false;
             // 
             // btn_Start
             // 
-            btn_Start.Location = new Point(364, 157);
+            btn_Start.Location = new Point(532, 28);
             btn_Start.Name = "btn_Start";
             btn_Start.Size = new Size(75, 23);
             btn_Start.TabIndex = 6;
@@ -93,36 +105,47 @@
             // 
             // btn_Pause
             // 
-            btn_Pause.Location = new Point(451, 157);
+            btn_Pause.AccessibleDescription = "cntrlsDownload";
+            btn_Pause.AccessibleName = "cntrlsDownload";
+            btn_Pause.Location = new Point(519, 69);
             btn_Pause.Name = "btn_Pause";
             btn_Pause.Size = new Size(75, 23);
             btn_Pause.TabIndex = 7;
+            btn_Pause.Tag = "cntrlsDownload";
             btn_Pause.Text = "&Pause";
             btn_Pause.UseVisualStyleBackColor = true;
+            btn_Pause.Visible = false;
             btn_Pause.Click += btn_Pause_Click;
             // 
             // val_downloaded
             // 
+            val_downloaded.AccessibleDescription = "cntrlsDownload";
+            val_downloaded.AccessibleName = "cntrlsDownload";
             val_downloaded.AutoSize = true;
-            val_downloaded.Location = new Point(76, 97);
+            val_downloaded.Location = new Point(63, 51);
             val_downloaded.Name = "val_downloaded";
             val_downloaded.Size = new Size(34, 15);
             val_downloaded.TabIndex = 11;
+            val_downloaded.Tag = "cntrlsDownload";
             val_downloaded.Text = "0 MB";
+            val_downloaded.Visible = false;
             // 
             // val_downloadLabel
             // 
             val_downloadLabel.AutoSize = true;
-            val_downloadLabel.Location = new Point(76, 71);
+            val_downloadLabel.Location = new Point(63, 25);
             val_downloadLabel.Name = "val_downloadLabel";
             val_downloadLabel.Size = new Size(0, 15);
             val_downloadLabel.TabIndex = 12;
+            val_downloadLabel.Tag = "cntrlsDownload";
+            val_downloadLabel.Visible = false;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(582, 201);
+            AutoSize = true;
+            ClientSize = new Size(641, 100);
             Controls.Add(val_downloadLabel);
             Controls.Add(val_downloaded);
             Controls.Add(btn_Pause);
@@ -135,6 +158,7 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "Form1";
+            Opacity = 0.95D;
             Text = "Form1";
             ResumeLayout(false);
             PerformLayout();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace wf_DownloadManager.Models
 {
-    internal class LinkInfo
+    internal class LinkInfoModel
     {
         public Uri uri { get; set; }
         public string downloadFolderWithFileName { get; set; }
