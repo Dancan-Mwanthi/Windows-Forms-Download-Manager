@@ -14,22 +14,20 @@ namespace wf_DownloadManager.Formaters
 {
     internal class LinkInfoPopulater : LinkInfoModel
     {
-        public LinkInfoModel PopulateLinkInfo(string url)
+        public async Task<LinkInfoModel> PopulateLinkInfo(string url)
         {
-            //string fileExtension = Path.GetExtension(url);
-
             bool IsNullOrEmpty = string.IsNullOrEmpty(Path.GetExtension(url));
 
             string youtubeDefaultUrl = YouTube.YoutubeUrl.Replace("https://", "");
 
             if (url.Contains(youtubeDefaultUrl))
-                DownloadYoutubeVideo(url);
+                 await _youtubeExploder(url);
             else if (IsNullOrEmpty)
                 DownloadOtherVideos(url);
             else
-                DownloadFile(url);
+                _downloadFile(url);
             
-            this.downloadFolderWithFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads", this.linkLabel);
+            downloadFolderWithFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads", linkLabel);
 
             return this;
         }
@@ -42,65 +40,21 @@ namespace wf_DownloadManager.Formaters
             //this.linkLabel = Path.GetFileName(url);
         }
 
-        private async void YoutubeExploder(string url)
+        private async Task _youtubeExploder(string url)
         {
-            var youtube = new YoutubeClient();
+            var streamManifest = await new YoutubeClient().Videos.Streams.GetManifestAsync(url);
 
-            // You can specify either the video URL or its ID
-            var videoUrl = url;
-            var video = await youtube.Videos.GetAsync(videoUrl);
+            var streamInfo = streamManifest.GetMuxedStreams().GetWithHighestVideoQuality();
 
-            var title = video.Title; // "Collections - Blender 2.80 Fundamentals"
-            var author = video.Author.ChannelTitle; // "Blender"
-            var duration = video.Duration; // 00:07:20
+            YouTubeVideo video = await YouTube.Default.GetVideoAsync(url); // Gets a Video object with info about the video
 
-            this.uri = new Uri(video.Url);
-            this.linkLabel = video.Title;
-
-            ////var youtube = new YoutubeClient();
-
-            ////var videoUrl = url;
-            //var streamManifest = await youtube.Videos.Streams.GetManifestAsync(videoUrl);
-            //// Get highest quality muxed stream
-            //var streamInfo = streamManifest.GetMuxedStreams().GetWithHighestVideoQuality();
+            uri = new Uri(streamInfo.Url);
+            linkLabel = video.FullName;
         }
-
-        private async Task DownloadYoutubeVideos(string url)
+        private void _downloadFile(string url)
         {
-            var youtube = new YoutubeClient();
-            var videoUrl = url;
-            var streamManifest = await youtube.Videos.Streams.GetManifestAsync(videoUrl);
-
-            // Get the highest quality video stream (adaptive stream)
-            var streamInfo = streamManifest.GetVideoOnlyStreams()
-                                            .OrderByDescending(s => s.VideoQuality)
-                                            .FirstOrDefault();
-
-            var youTube = YouTube.Default;
-
-            YouTubeVideo video = youTube.GetVideo(url); // Gets a Video object with info about the video
-
-            this.uri = new Uri(streamInfo.Url);
-            this.linkLabel = video.FullName;
-        }
-
-
-        private void DownloadYoutubeVideo(string url)
-        {
-            //await DownloadYoutubeVideos(url);
-
-            var youTube = YouTube.Default;
-
-            YouTubeVideo video = youTube.GetVideo(url); // Gets a Video object with info about the video
-
-            this.uri = new Uri(video.Uri);
-            this.linkLabel = video.FullName;
-        }
-
-        private void DownloadFile(string url)
-        {
-            this.uri = new Uri(url);
-            this.linkLabel = Path.GetFileName(url);
+            uri = new Uri(url);
+            linkLabel = Path.GetFileName(url);
         }
     }
 }

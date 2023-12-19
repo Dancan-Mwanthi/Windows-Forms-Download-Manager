@@ -8,25 +8,21 @@ using System.Windows.Forms;
 
 namespace wf_DownloadManager.UpdateUi
 {
-    internal class UpdateUIControls
+    internal class UpdateUIText
     {
-        public void UpdateUIControl(Control control, string text)
+        public void Begin(Control control, string text)
         {
-            xx_updateUIControl(control, text);
+            _updateUIText(control, text);
         }
-        private void xx_updateUIControl(Control control, string text)
+        private void _updateUIText(Control control, string text)
         {
             if (control.InvokeRequired)
-            {
                 control.Invoke(new MethodInvoker(() =>
                 {
                     control.Text = text;
                 }));
-            }
-            else
-            {
+            else 
                 control.Text = text;
-            }
         }
     }
 }

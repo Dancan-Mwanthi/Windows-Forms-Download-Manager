@@ -54,7 +54,7 @@
             txt_Url.Name = "txt_Url";
             txt_Url.Size = new Size(454, 23);
             txt_Url.TabIndex = 1;
-            txt_Url.Text = "https://www.youtube.com/watch?v=fkFNQtWZQzo&ab_channel=OzzyManReviews";
+            txt_Url.Text = "https://www.youtube.com/watch?v=v_XsmqA_YTk";
             // 
             // lbl_Status
             // 
@@ -115,7 +115,7 @@
             btn_Pause.Text = "&Pause";
             btn_Pause.UseVisualStyleBackColor = true;
             btn_Pause.Visible = false;
-            btn_Pause.Click += btn_Pause_Click;
+            //btn_Pause.Click += btn_Pause_Click;
             // 
             // val_downloaded
             // 
@@ -157,9 +157,9 @@
             Controls.Add(lbl_Url);
             MaximizeBox = false;
             MinimizeBox = false;
-            Name = "Form1";
+            Name = "wfDownloadManager";
             Opacity = 0.95D;
-            Text = "Form1";
+            Text = "Download Manager";
             ResumeLayout(false);
             PerformLayout();
         }

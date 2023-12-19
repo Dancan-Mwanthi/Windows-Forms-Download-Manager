@@ -1,34 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using wf_DownloadManager.Models;
+using wf_DownloadManager.Utilities;
 
 namespace wf_DownloadManager.UpdateUi
 {
     internal class UpdateProgressBar
     {
-        public void BeginupdateProgressBar(ProgressBar progressBar, long receivedBytes, long totalBytes)
+        IInternet_Speed bandwidth = new Internet_Speed();
+        public void Begin(
+            ProgressBar progressBar,
+            DownloadProgressChangedEventArgs e)
         {
-            xx_updateProgressBar(progressBar, receivedBytes, totalBytes);
+            _updateProgressBar(progressBar, e);
         }
-
-        private void xx_updateProgressBar(ProgressBar progressBar, long receivedBytes, long totalBytes)
+        private void _updateProgressBar(
+            ProgressBar progressBar,
+            DownloadProgressChangedEventArgs e)
         {
-            int totalMB = (int)(totalBytes / 1024d / 1024d);
-            int receivedMB = (int)(receivedBytes / 1024d / 1024d);
-
-            if (totalMB > 0)
-            {
-                int progressPercentage = receivedMB * 100 / totalMB;
-
-                if (progressPercentage < 1)
+            if (progressBar.InvokeRequired)
+                progressBar.Invoke(new MethodInvoker(() =>
                 {
-                    progressPercentage = 1;
-                }
-
-                progressBar.Value = progressPercentage;
-            }
+                    progressBar.Value = bandwidth.Bandwidth(e);
+                }));
+            else
+                progressBar.Value = bandwidth.Bandwidth(e);
         }
     }
 }

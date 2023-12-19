@@ -18,14 +18,11 @@ namespace wf_DownloadManager.ThreadHandlers
             lock (lockObject)
             {
                 isPaused = !isPaused;
+
                 if (!isPaused)
-                {
                     pauseEvent.Set(); // Signal to resume if paused.
-                }
                 else
-                {
                     pauseEvent.Reset(); // Reset event to pause.
-                }
             }
             return isPaused;
         }
