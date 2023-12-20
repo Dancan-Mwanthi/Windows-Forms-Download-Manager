@@ -39,7 +39,7 @@ namespace wf_DownloadManager.Utilities
             T newControl = new ();
 
             if (initPauseEvent)
-                ((Button)(Control)newControl).Click += (sender, e) =>
+                newControl.Click += (sender, e) =>
                     _events_Factory._ePause_Click(sender, e, (Button)(Control)newControl);
 
             newControl.Name = originalControl.Name + _controlUniqueName++;

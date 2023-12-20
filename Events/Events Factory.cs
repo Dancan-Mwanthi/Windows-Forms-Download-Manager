@@ -9,9 +9,7 @@ namespace wf_DownloadManager.Events
 {
     internal class Events_Factory
     {
-        public void _ePause_Click(object sender, EventArgs e, Button button)
-        {
+        public void _ePause_Click(object sender, EventArgs e, Button button) =>
             button.Text = TogglePauseThread.TogglePause() ? "Resume" : "Pause";
-        }
     }
 }
