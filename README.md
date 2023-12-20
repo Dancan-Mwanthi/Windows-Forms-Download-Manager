@@ -1,4 +1,5 @@
-# DownloadMaster
+# wf_DownloadManager
+An ideal learning project focusing on asynchronous operations and advanced C# topics for developers, delivered through a download manager that not only supports HTTP and FTP downloads but will soon extend its capabilities to include BitTorrent, Magnet, and more.
 
 ## Overview
 
@@ -6,74 +7,60 @@ DownloadMaster is a Windows Forms application developed in C# that serves as a d
 
 ## Features
 
-1. **User-Friendly Interface:**
-   - The application provides a clean and intuitive Windows Forms interface for users to manage their downloads easily.
+- Can download large files if app is in background.
+- Can download files if app is in background.
+- Can download multiple files at a time.
+- It can resume interrupted downloads.
+- User can also pause the download.
 
-2. **Download Management:**
-   - Users can add, pause, resume, and remove downloads.
-   - The download list displays essential information such as file name, progress, size, and download speed.
 
-3. **Multi-threaded Downloads:**
-   - The application utilizes multi-threading to download files concurrently, optimizing download speeds.
+# `Requires .NET 6 or later`
 
-4. **Download Queue:**
-   - Users can organize their downloads by queuing multiple files for sequential downloading.
-
-5. **Download History:**
-   - Download history is maintained, allowing users to track and review their past downloads.
-
-6. **User Authentication:**
-   - Support for basic user authentication for websites that require login credentials for downloading.
-
-7. **Browser Integration:**
-   - Integration with web browsers to capture download requests and add them to the DownloadMaster queue.
-
-8. **IDM-like Features:**
-   - Attempt to incorporate some features inspired by Internet Download Manager for an enhanced user experience.
-
-## System Requirements
-
-- Windows operating system (tested on Windows 7, 8, 10)
-- .NET Framework 4.5 or later
-
-## Getting Started
-
-1. **Clone the Repository:**
-
-2. **Open Solution:**
-- Open the solution file (`wf_DownloadManager.sln`) in Visual Studio.
-
-3. **Build Solution:**
-- Build the solution to resolve dependencies and compile the application.
-
-4. **Run the Application:**
-- Start the application from Visual Studio or locate the executable in the `bin` directory.
-
-## Usage
-
-1. **Adding a Download:**
-- Click on the "Add Download" button and enter the URL of the file you want to download.
-
-2. **Managing Downloads:**
-- Pause, resume, or remove downloads using the corresponding buttons in the application.
-
-3. **Download Queue:**
-- Organize downloads by queuing multiple files for sequential downloading.
-
-4. **Download History:**
-- Access the download history to view details of past downloads.
-
-5. **User Authentication:**
-- Configure user authentication settings for websites that require login credentials.
-
-6. **Browser Integration:**
-- Enable browser integration to capture download requests from web browsers.
-
+## Clone the Repository
+   ````
+https://github.com/Dancan-Mwanthi/wf_DownloadManager.git
+````
 ## Known Issues
 
 1. **System.Net.WebException: The remote server returned an error: (403) Forbidden.**
 - **Issue Description:** Users may encounter a `System.Net.WebException` with the error message indicating that the remote server returned an error with status code 403 (Forbidden).
 - **Resolution:** This issue has been resolved by making the download process asynchronous. The application now handles web requests more efficiently, reducing the likelihood of encountering 403 errors.
+
+  ````csharp
+  using (var webResponse = await request.GetResponseAsync().ConfigureAwait(false))
+
+## Code Optimization
+
+In the latest version of DownloadMaster,an optimization has been made in; 
+
+1. How controls are retrieved within the application. The method for retrieving controls now utilizes a generic method, enhancing the efficiency of control retrieval. Below is an example of the optimized code:
+
+   ````csharp
+    T _GetControl<T>(string controlName) where T : Control, new() =>
+    _form.Controls.Find(controlName, true).OfType<T>().FirstOrDefault() ?? new T();
+   ````
+
+2. Freezing when a download is added. Optimized the the threading to eliminate thread locking.
+
+   Previous Code
+   `````csharp
+   Thread downloadThread = new Thread(async () =>
+    {
+      
+    });
+   
+    xdownloadThreads.Add(downloadThread);
+   
+    downloadThread.Start();
+   ``````
+   
+   Current Code
+      ````csharp
+   await Task.Run(async () =>
+   {
+      
+   });
+   ````
   
 ## Contribution Guidelines
 
