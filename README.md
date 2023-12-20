@@ -14,7 +14,7 @@ DownloadMaster is a Windows Forms application developed in C# that serves as a d
 - User can also pause the download.
 
 
-# `Requires .NET 6 or later`
+# `Requires .NET >= 6`
 
 ## Clone the Repository
    ````
