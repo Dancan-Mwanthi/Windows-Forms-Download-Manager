@@ -41,7 +41,7 @@ DownloadMaster is a Windows Forms application developed in C# that serves as a d
 1. **Clone the Repository:**
 
 2. **Open Solution:**
-- Open the solution file (`DownloadMaster.sln`) in Visual Studio.
+- Open the solution file (`wf_DownloadManager.sln`) in Visual Studio.
 
 3. **Build Solution:**
 - Build the solution to resolve dependencies and compile the application.
