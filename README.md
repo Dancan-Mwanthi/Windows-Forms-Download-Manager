@@ -5,16 +5,15 @@ An ideal learning project focusing on asynchronous operations and advanced C# to
 
 DownloadMaster is a Windows Forms application developed in C# that serves as a download manager. The project aims to provide a user-friendly interface for managing and organizing downloads, with a focus on mimicking some features of Internet Download Manager (IDM) through reverse engineering.
 
-## Features
-
-- Can download large files if app is in background.
-- Can download files if app is in background.
-- Can download multiple files at a time.
-- It can resume interrupted downloads.
-- User can also pause the download.
-
-
 # `Requires .NET >= 6`
+
+## Functionality Highlights
+
+- Seamless downloading of large files even when the application is in the background.
+- Background-enabled file downloads for uninterrupted task execution.
+- Concurrent downloading of multiple files for enhanced efficiency.
+- Capable to resume downloads that were interrupted.
+- Users have the option to pause ongoing downloads.
 
 ## Clone the Repository
    ````
