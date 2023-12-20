@@ -31,7 +31,7 @@ https://github.com/Dancan-Mwanthi/wf_DownloadManager.git
 
 ## Code Optimization
 
-In the latest version of wf_DownloadManager,an optimization has been made in; 
+In the latest version of wf_DownloadManager, an optimization has been made in; 
 
 1. How controls are retrieved within the application. The method for retrieving controls now utilizes a generic method, enhancing the efficiency of control retrieval. Below is an example of the optimized code:
 
@@ -64,7 +64,7 @@ In the latest version of wf_DownloadManager,an optimization has been made in;
   
 ## Contribution Guidelines
 
-We welcome contributions to enhance the features and stability of DownloadMaster. If you wish to contribute:
+We welcome contributions to enhance the features and stability of wf_DownloadManager. If you wish to contribute:
 
 1. Fork the repository and create a new branch for your feature or bug fix.
 2. Ensure that your code follows the established coding standards.
